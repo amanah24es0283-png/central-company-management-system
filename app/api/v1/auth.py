@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.jwt import create_access_token
+from app.core.dependencies import get_current_token
 from app.core.security import verify_password
 from app.db.database import get_db
 from app.models.user import User
@@ -59,4 +60,15 @@ def login(
             "company_id": user.company_id,
             "branch_id": user.branch_id,
         },
+    }
+
+
+@router.get("/me")
+def get_me(current_token: dict = Depends(get_current_token)):
+    return {
+        "message": "Authentication successful",
+        "user_id": current_token["user_id"],
+        "role": current_token["role"],
+        "company_id": current_token["company_id"],
+        "branch_id": current_token["branch_id"],
     }
