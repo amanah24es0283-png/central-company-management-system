@@ -9,3 +9,4 @@ from app.models.attendance import Attendance
 from app.models.leave_request import LeaveRequest
 from app.models.report import Report
 from app.models.notification import Notification
+from app.models.audit_log import AuditLog
