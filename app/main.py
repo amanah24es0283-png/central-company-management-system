@@ -11,3 +11,10 @@ def root():
     return {
         "message": "Central Company Management System API is running"
     }
+
+from app.api.v1.auth import router as auth_router
+
+app.include_router(
+    auth_router,
+    prefix="/api/v1"
+)
