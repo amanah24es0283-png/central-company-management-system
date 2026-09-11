@@ -5,6 +5,7 @@ from app.core.jwt import create_access_token
 from app.core.dependencies import get_current_token
 from app.core.authorization import require_roles
 from app.core.tenant import require_same_company
+from app.core.branch_access import require_same_branch
 from app.core.security import verify_password
 from app.db.database import get_db
 from app.models.user import User
@@ -85,4 +86,16 @@ def check_company_access(
         "message": "Company access granted",
         "company_id": company_id,
         "user_company_id": current_token["company_id"],
+    }
+
+
+@router.get("/branch/{branch_id}/access")
+def check_branch_access(
+    branch_id: int,
+    current_token: dict = Depends(require_same_branch),
+):
+    return {
+        "message": "Branch access granted",
+        "branch_id": branch_id,
+        "user_branch_id": current_token["branch_id"],
     }
