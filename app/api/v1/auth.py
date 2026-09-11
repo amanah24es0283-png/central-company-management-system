@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.jwt import create_access_token
 from app.core.dependencies import get_current_token
+from app.core.authorization import require_roles
 from app.core.security import verify_password
 from app.db.database import get_db
 from app.models.user import User
@@ -64,7 +65,7 @@ def login(
 
 
 @router.get("/me")
-def get_me(current_token: dict = Depends(get_current_token)):
+def get_me(current_token: dict = Depends(require_roles("OWNER"))):
     return {
         "message": "Authentication successful",
         "user_id": current_token["user_id"],
