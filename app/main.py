@@ -18,3 +18,10 @@ app.include_router(
     auth_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.companies import router as companies_router
+
+app.include_router(
+    companies_router,
+    prefix="/api/v1"
+)
