@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.jwt import create_access_token
 from app.core.dependencies import get_current_token
 from app.core.authorization import require_roles
+from app.core.tenant import require_same_company
 from app.core.security import verify_password
 from app.db.database import get_db
 from app.models.user import User
@@ -72,4 +73,16 @@ def get_me(current_token: dict = Depends(require_roles("OWNER"))):
         "role": current_token["role"],
         "company_id": current_token["company_id"],
         "branch_id": current_token["branch_id"],
+    }
+
+
+@router.get("/company/{company_id}/access")
+def check_company_access(
+    company_id: int,
+    current_token: dict = Depends(require_same_company),
+):
+    return {
+        "message": "Company access granted",
+        "company_id": company_id,
+        "user_company_id": current_token["company_id"],
     }
