@@ -32,3 +32,10 @@ app.include_router(
     branches_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.departments import router as departments_router
+
+app.include_router(
+    departments_router,
+    prefix="/api/v1"
+)
