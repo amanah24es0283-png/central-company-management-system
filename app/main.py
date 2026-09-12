@@ -46,3 +46,10 @@ app.include_router(
     employees_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.tasks import router as tasks_router
+
+app.include_router(
+    tasks_router,
+    prefix="/api/v1"
+)
