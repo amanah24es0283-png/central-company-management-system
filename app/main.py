@@ -25,3 +25,10 @@ app.include_router(
     companies_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.branches import router as branches_router
+
+app.include_router(
+    branches_router,
+    prefix="/api/v1"
+)
