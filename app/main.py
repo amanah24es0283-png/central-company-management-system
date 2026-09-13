@@ -53,3 +53,10 @@ app.include_router(
     tasks_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.attendance import router as attendance_router
+
+app.include_router(
+    attendance_router,
+    prefix="/api/v1"
+)
