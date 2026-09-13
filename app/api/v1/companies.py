@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.models.company import Company
+from app.services.audit import log_action
 from app.schemas.company import CompanyCreate, CompanyUpdate
 
 router = APIRouter(prefix="/companies", tags=["Companies"])
@@ -71,6 +72,15 @@ def create_company(
     db.commit()
     db.refresh(company)
 
+    log_action(
+        db=db,
+        user_id=current_token["user_id"],
+        action="CREATE",
+        entity_type="COMPANY",
+        entity_id=company.id,
+        details=f"Created company: {company.name}",
+    )
+
     return company
 
 
@@ -120,5 +130,14 @@ def update_company(
 
     db.commit()
     db.refresh(company)
+
+    log_action(
+        db=db,
+        user_id=current_token["user_id"],
+        action="UPDATE",
+        entity_type="COMPANY",
+        entity_id=company.id,
+        details=f"Updated company: {company.name}",
+    )
 
     return company

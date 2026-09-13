@@ -89,3 +89,11 @@ app.include_router(
     dashboard_router,
     prefix="/api/v1"
 )
+
+
+from app.api.v1.audit_logs import router as audit_logs_router
+
+app.include_router(
+    audit_logs_router,
+    prefix="/api/v1"
+)

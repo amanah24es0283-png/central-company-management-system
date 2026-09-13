@@ -9,6 +9,7 @@ from app.core.branch_access import require_same_branch
 from app.core.security import verify_password
 from app.db.database import get_db
 from app.models.user import User
+from app.services.audit import log_action
 from app.schemas.auth import LoginRequest
 
 router = APIRouter(
@@ -49,6 +50,15 @@ def login(
             "company_id": user.company_id,
             "branch_id": user.branch_id,
         }
+    )
+
+    log_action(
+        db=db,
+        user_id=user.id,
+        action="LOGIN",
+        entity_type="AUTHENTICATION",
+        entity_id=user.id,
+        details="User logged in successfully",
     )
 
     return {
