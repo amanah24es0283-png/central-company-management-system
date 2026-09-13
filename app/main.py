@@ -67,3 +67,10 @@ app.include_router(
     leave_requests_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.reports import router as reports_router
+
+app.include_router(
+    reports_router,
+    prefix="/api/v1"
+)
