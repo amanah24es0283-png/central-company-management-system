@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.models.leave_request import LeaveRequest
+from app.services.audit import log_action
 from app.models.employee import Employee
 from app.models.department import Department
 from app.models.branch import Branch
@@ -290,7 +291,11 @@ def update_leave_request_status(
     leave_request.status = data.status
     leave_request.approved_by = current_token["user_id"]
 
+    action = "APPROVE" if data.status == "approved" else "REJECT"
+    details = "Leave request approved" if data.status == "approved" else "Leave request rejected"
+
     db.commit()
+    log_action(db=db, user_id=current_token["user_id"], action=action, entity_type="LEAVE_REQUEST", entity_id=leave_request.id, details=details)
     db.refresh(leave_request)
 
     return leave_request
