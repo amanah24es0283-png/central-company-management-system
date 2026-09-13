@@ -60,3 +60,10 @@ app.include_router(
     attendance_router,
     prefix="/api/v1"
 )
+
+from app.api.v1.leave_requests import router as leave_requests_router
+
+app.include_router(
+    leave_requests_router,
+    prefix="/api/v1"
+)
