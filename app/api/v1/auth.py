@@ -32,6 +32,14 @@ def login(
         )
 
     if not verify_password(data.password, user.password_hash):
+        log_action(
+            db=db,
+            user_id=user.id,
+            action="LOGIN_FAILED",
+            entity_type="AUTHENTICATION",
+            entity_id=user.id,
+            details="Failed login attempt",
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
