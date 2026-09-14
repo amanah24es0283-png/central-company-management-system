@@ -16,6 +16,7 @@ def explore_employees(
     search: str | None = Query(default=None),
     branch_id: int | None = Query(default=None),
     department_id: int | None = Query(default=None),
+    status: str | None = Query(default=None),
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
@@ -27,6 +28,7 @@ def explore_employees(
         search=search,
         branch_id=branch_id,
         department_id=department_id,
+        status=status,
     )
 
     return {

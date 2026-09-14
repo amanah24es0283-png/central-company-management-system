@@ -11,6 +11,7 @@ def search_employees(
     search: str | None = None,
     branch_id: int | None = None,
     department_id: int | None = None,
+    status: str | None = None,
 ):
     query = (
         db.query(Employee)
@@ -24,6 +25,9 @@ def search_employees(
 
     if department_id is not None:
         query = query.filter(Department.id == department_id)
+
+    if status:
+        query = query.filter(Employee.status == status)
 
     if search:
         search_value = f"%{search}%"
