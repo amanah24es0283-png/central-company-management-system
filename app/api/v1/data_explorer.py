@@ -14,6 +14,7 @@ router = APIRouter(
 @router.get("/employees")
 def explore_employees(
     search: str | None = Query(default=None),
+    branch_id: int | None = Query(default=None),
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
@@ -23,6 +24,7 @@ def explore_employees(
         db=db,
         company_id=company_id,
         search=search,
+        branch_id=branch_id,
     )
 
     return {

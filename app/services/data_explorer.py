@@ -9,6 +9,7 @@ def search_employees(
     db: Session,
     company_id: int,
     search: str | None = None,
+    branch_id: int | None = None,
 ):
     query = (
         db.query(Employee)
@@ -16,6 +17,9 @@ def search_employees(
         .join(Branch, Department.branch_id == Branch.id)
         .filter(Branch.company_id == company_id)
     )
+
+    if branch_id is not None:
+        query = query.filter(Branch.id == branch_id)
 
     if search:
         search_value = f"%{search}%"
