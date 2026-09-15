@@ -84,9 +84,15 @@ app.include_router(
 
 
 from app.api.v1.dashboard import router as dashboard_router
+from app.api.v1.unified_explorer import router as unified_explorer_router
 
 app.include_router(
     dashboard_router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    unified_explorer_router,
     prefix="/api/v1"
 )
 
