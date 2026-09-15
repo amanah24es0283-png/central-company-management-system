@@ -1,9 +1,10 @@
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "ccms-super-secret-key-change-this-later"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+load_dotenv()
 
-ACCESS_TOKEN_EXPIRE = timedelta(
-    minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-)
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+ACCESS_TOKEN_EXPIRE = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
