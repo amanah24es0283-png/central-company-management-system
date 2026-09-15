@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy import String, Text, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid as uuid_lib
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.database import Base
@@ -10,6 +12,7 @@ class Company(Base):
     __tablename__ = "companies"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    uuid: Mapped[uuid_lib.UUID] = mapped_column(UUID(as_uuid=True), default=uuid_lib.uuid4, nullable=False, unique=True, index=True)
     name: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     country: Mapped[str] = mapped_column(String(100), nullable=False)
