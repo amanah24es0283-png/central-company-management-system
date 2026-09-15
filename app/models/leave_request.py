@@ -1,6 +1,8 @@
 from datetime import date, datetime
 
 from sqlalchemy import String, Date, DateTime, ForeignKey, Text
+from sqlalchemy.dialects.postgresql import UUID
+import uuid as uuid_lib
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.database import Base
@@ -10,6 +12,13 @@ class LeaveRequest(Base):
     __tablename__ = "leave_requests"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    uuid: Mapped[uuid_lib.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        default=uuid_lib.uuid4,
+        nullable=False,
+        unique=True,
+        index=True
+    )
 
     employee_id: Mapped[int] = mapped_column(
         ForeignKey("employees.id"),
