@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_token
 from app.db.database import get_db
+from app.core.authorization import require_roles
+from app.services.advanced_dashboard import get_advanced_dashboard
 
 from app.models.company import Company
 from app.models.branch import Branch
@@ -18,6 +20,19 @@ router = APIRouter(
     prefix="/dashboard",
     tags=["Dashboard"],
 )
+
+
+@router.get("/advanced")
+def advanced_dashboard(
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    company_id = current_token["company_id"]
+
+    return get_advanced_dashboard(
+        db=db,
+        company_id=company_id,
+    )
 
 
 @router.get("/")
