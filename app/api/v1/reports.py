@@ -235,6 +235,29 @@ def branch_report(
     )
 
 
+@router.get("/leave-requests/export")
+def export_leave_report(
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    company_id = current_token["company_id"]
+
+    report = get_leave_report(
+        db=db,
+        company_id=company_id,
+    )
+
+    csv_data = export_to_csv(report["leave_requests"])
+
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=leave_requests_report.csv"
+        },
+    )
+
+
 @router.get("/leave-requests")
 def leave_report(
     current_token: dict = Depends(require_roles("OWNER")),
