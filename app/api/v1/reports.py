@@ -1,8 +1,10 @@
+from fastapi.responses import Response
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.authorization import require_roles
 from app.db.database import get_db
+from app.services.csv_export import export_to_csv
 from app.services.employee_report import get_employee_report
 from app.services.task_report import get_task_report
 from app.services.branch_report import get_branch_report
@@ -123,6 +125,29 @@ def list_reports(
         )
 
     return query.all()
+
+
+@router.get("/employees/export")
+def export_employee_report(
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    company_id = current_token["company_id"]
+
+    report = get_employee_report(
+        db=db,
+        company_id=company_id,
+    )
+
+    csv_data = export_to_csv(report["employees"])
+
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=employees_report.csv"
+        },
+    )
 
 
 @router.get("/employees")
