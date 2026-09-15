@@ -199,6 +199,29 @@ def task_report(
     )
 
 
+@router.get("/branches/export")
+def export_branch_report(
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    company_id = current_token["company_id"]
+
+    report = get_branch_report(
+        db=db,
+        company_id=company_id,
+    )
+
+    csv_data = export_to_csv(report["branches"])
+
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=branches_report.csv"
+        },
+    )
+
+
 @router.get("/branches")
 def branch_report(
     current_token: dict = Depends(require_roles("OWNER")),
