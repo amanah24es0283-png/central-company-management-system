@@ -94,6 +94,7 @@ app.include_router(
 from app.api.v1.audit_logs import router as audit_logs_router
 from app.api.v1.analytics import router as analytics_router
 from app.api.v1.data_explorer import router as data_explorer_router
+from app.api.v1.task_explorer import router as task_explorer_router
 
 app.include_router(
     audit_logs_router,
@@ -107,5 +108,9 @@ app.include_router(
 
 app.include_router(
     data_explorer_router,
+    prefix="/api/v1"
+)
+app.include_router(
+    task_explorer_router,
     prefix="/api/v1"
 )
