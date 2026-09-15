@@ -5,6 +5,7 @@ from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.services.employee_report import get_employee_report
 from app.services.task_report import get_task_report
+from app.services.branch_report import get_branch_report
 from app.models.report import Report
 from app.models.branch import Branch
 from app.schemas.report import (
@@ -144,6 +145,19 @@ def task_report(
     company_id = current_token["company_id"]
 
     return get_task_report(
+        db=db,
+        company_id=company_id,
+    )
+
+
+@router.get("/branches")
+def branch_report(
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    company_id = current_token["company_id"]
+
+    return get_branch_report(
         db=db,
         company_id=company_id,
     )
