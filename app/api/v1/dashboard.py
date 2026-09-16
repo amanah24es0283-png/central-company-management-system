@@ -14,6 +14,7 @@ from app.models.task import Task
 from app.models.leave_request import LeaveRequest
 from app.models.report import Report
 from app.models.notification import Notification
+from app.models.attendance import Attendance
 from app.models.user import User
 
 router = APIRouter(
@@ -124,6 +125,26 @@ def get_dashboard(
         User.status == "inactive",
     ).count()
 
+    attendance_query = (
+        db.query(Attendance)
+        .join(Employee, Attendance.employee_id == Employee.id)
+        .join(Department, Employee.department_id == Department.id)
+        .join(Branch, Department.branch_id == Branch.id)
+        .filter(Branch.company_id == company_id)
+    )
+
+    attendance_present = attendance_query.filter(
+        Attendance.status == "present"
+    ).count()
+
+    attendance_absent = attendance_query.filter(
+        Attendance.status == "absent"
+    ).count()
+
+    attendance_late = attendance_query.filter(
+        Attendance.status == "late"
+    ).count()
+
     return {
         "company_id": company_id,
         "summary": {
@@ -147,5 +168,10 @@ def get_dashboard(
         },
         "notifications": {
             "unread": notifications_unread,
+        },
+        "attendance": {
+            "present": attendance_present,
+            "absent": attendance_absent,
+            "late": attendance_late,
         },
     }
