@@ -119,3 +119,65 @@ def update_user(
     db.refresh(user)
 
     return user
+
+
+@router.patch("/{user_uuid}/deactivate", response_model=UserResponse)
+def deactivate_user(
+    user_uuid: UUID,
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    user = (
+        db.query(User)
+        .filter(
+            User.uuid == user_uuid,
+            User.company_id == current_token["company_id"],
+        )
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    if user.id == current_token["user_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You cannot deactivate your own account",
+        )
+
+    user.status = "inactive"
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+
+@router.patch("/{user_uuid}/activate", response_model=UserResponse)
+def activate_user(
+    user_uuid: UUID,
+    current_token: dict = Depends(require_roles("OWNER")),
+    db: Session = Depends(get_db),
+):
+    user = (
+        db.query(User)
+        .filter(
+            User.uuid == user_uuid,
+            User.company_id == current_token["company_id"],
+        )
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    user.status = "active"
+    db.commit()
+    db.refresh(user)
+
+    return user
