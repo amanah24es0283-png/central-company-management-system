@@ -87,7 +87,7 @@ def create_leave_request(
     return leave_request
 
 
-@router.get("/")
+@router.get("/", response_model=list[LeaveRequestResponse])
 def list_leave_requests(
     employee_id: int | None = None,
     status_filter: str | None = None,

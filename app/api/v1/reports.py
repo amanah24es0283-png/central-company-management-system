@@ -80,7 +80,7 @@ def create_report(
     return report
 
 
-@router.get("/")
+@router.get("/", response_model=list[ReportResponse])
 def list_reports(
     branch_id: int | None = None,
     status_filter: str | None = None,

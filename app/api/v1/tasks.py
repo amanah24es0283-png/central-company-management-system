@@ -38,7 +38,7 @@ def get_employee_company(
     return employee, department, branch
 
 
-@router.get("/")
+@router.get("/", response_model=list[TaskResponse])
 def list_tasks(
     assigned_to: int | None = None,
     status_filter: str | None = None,

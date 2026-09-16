@@ -71,7 +71,7 @@ def create_attendance(
     return attendance
 
 
-@router.get("/")
+@router.get("/", response_model=list[AttendanceResponse])
 def list_attendance(
     employee_id: int | None = None,
     current_token: dict = Depends(require_roles("OWNER")),

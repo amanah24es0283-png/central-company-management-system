@@ -55,7 +55,7 @@ def create_notification(
     return notification
 
 
-@router.get("/")
+@router.get("/", response_model=list[NotificationResponse])
 def list_notifications(
     unread_only: bool = False,
     current_token: dict = Depends(get_current_token),
