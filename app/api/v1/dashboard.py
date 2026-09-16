@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -147,6 +149,7 @@ def get_dashboard(
 
     return {
         "company_id": company_id,
+        "generated_at": datetime.now(timezone.utc),
         "summary": {
             "companies": companies_count,
             "branches": branches_count,
