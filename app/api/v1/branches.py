@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.models.branch import Branch
-from app.schemas.branch import BranchCreate, BranchUpdate
+from app.schemas.branch import BranchCreate, BranchUpdate, BranchResponse
 
 router = APIRouter(prefix="/branches", tags=["Branches"])
 
@@ -21,14 +21,14 @@ def list_branches(
     return branches
 
 
-@router.get("/{branch_id}")
+@router.get("/{branch_uuid}", response_model=BranchResponse)
 def get_branch(
-    branch_id: int,
+    branch_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     branch = db.query(Branch).filter(
-        Branch.id == branch_id
+        Branch.uuid == branch_uuid
     ).first()
 
     if not branch:
@@ -76,15 +76,15 @@ def create_branch(
     return branch
 
 
-@router.patch("/{branch_id}")
+@router.patch("/{branch_uuid}", response_model=BranchResponse)
 def update_branch(
-    branch_id: int,
+    branch_uuid: str,
     data: BranchUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     branch = db.query(Branch).filter(
-        Branch.id == branch_id
+        Branch.uuid == branch_uuid
     ).first()
 
     if not branch:
