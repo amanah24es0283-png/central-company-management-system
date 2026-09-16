@@ -14,33 +14,21 @@ router = APIRouter(prefix="/employees", tags=["Employees"])
 
 @router.get("/")
 def list_employees(
-    department_id: int,
+    department_id: int | None = None,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
-    department = db.query(Department).filter(
-        Department.id == department_id
-    ).first()
+    query = (
+        db.query(Employee)
+        .join(Department, Employee.department_id == Department.id)
+        .join(Branch, Department.branch_id == Branch.id)
+        .filter(Branch.company_id == current_token["company_id"])
+    )
 
-    if not department:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Department not found",
-        )
+    if department_id is not None:
+        query = query.filter(Employee.department_id == department_id)
 
-    branch = db.query(Branch).filter(
-        Branch.id == department.branch_id
-    ).first()
-
-    if not branch or branch.company_id != current_token["company_id"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have access to this department",
-        )
-
-    return db.query(Employee).filter(
-        Employee.department_id == department_id
-    ).all()
+    return query.all()
 
 
 @router.get("/{employee_uuid}", response_model=EmployeeResponse)
