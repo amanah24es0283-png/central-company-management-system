@@ -7,6 +7,7 @@ from app.core.authorization import require_roles
 from app.core.security import hash_password
 from app.db.database import get_db
 from app.models.user import User
+from app.models.branch import Branch
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -119,6 +120,18 @@ def update_user(
         )
 
     update_data.pop("company_id", None)
+
+    if "branch_id" in update_data and update_data["branch_id"] is not None:
+        branch = db.query(Branch).filter(
+            Branch.id == update_data["branch_id"],
+            Branch.company_id == current_token["company_id"],
+        ).first()
+
+        if not branch:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You cannot assign a user to a branch outside your company",
+            )
 
     for field, value in update_data.items():
         setattr(user, field, value)
