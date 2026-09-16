@@ -20,3 +20,12 @@ class LeaveRequestStatusUpdate(BaseModel):
     status: str = Field(
         pattern="^(approved|rejected)$"
     )
+
+from uuid import UUID
+
+class LeaveRequestResponse(BaseModel):
+    uuid: UUID
+    start_date: date
+    end_date: date
+    reason: str | None = None
+    status: str

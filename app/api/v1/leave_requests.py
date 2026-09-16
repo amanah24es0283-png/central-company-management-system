@@ -12,6 +12,7 @@ from app.schemas.leave_request import (
     LeaveRequestCreate,
     LeaveRequestUpdate,
     LeaveRequestStatusUpdate,
+    LeaveRequestResponse,
 )
 
 router = APIRouter(
@@ -163,14 +164,14 @@ def list_leave_requests(
     return query.all()
 
 
-@router.get("/{leave_request_id}")
+@router.get("/{leave_request_uuid}", response_model=LeaveRequestResponse)
 def get_leave_request(
-    leave_request_id: int,
+    leave_request_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     leave_request = db.query(LeaveRequest).filter(
-        LeaveRequest.id == leave_request_id
+        LeaveRequest.uuid == leave_request_uuid
     ).first()
 
     if not leave_request:
@@ -193,15 +194,15 @@ def get_leave_request(
     return leave_request
 
 
-@router.patch("/{leave_request_id}")
+@router.patch("/{leave_request_uuid}", response_model=LeaveRequestResponse)
 def update_leave_request(
-    leave_request_id: int,
+    leave_request_uuid: str,
     data: LeaveRequestUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     leave_request = db.query(LeaveRequest).filter(
-        LeaveRequest.id == leave_request_id
+        LeaveRequest.uuid == leave_request_uuid
     ).first()
 
     if not leave_request:
@@ -254,15 +255,15 @@ def update_leave_request(
     return leave_request
 
 
-@router.patch("/{leave_request_id}/status")
+@router.patch("/{leave_request_uuid}/status", response_model=LeaveRequestResponse)
 def update_leave_request_status(
-    leave_request_id: int,
+    leave_request_uuid: str,
     data: LeaveRequestStatusUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     leave_request = db.query(LeaveRequest).filter(
-        LeaveRequest.id == leave_request_id
+        LeaveRequest.uuid == leave_request_uuid
     ).first()
 
     if not leave_request:
