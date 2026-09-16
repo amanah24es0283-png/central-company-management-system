@@ -114,6 +114,16 @@ def get_dashboard(
         .count()
     )
 
+    users_active = db.query(User).filter(
+        User.company_id == company_id,
+        User.status == "active",
+    ).count()
+
+    users_inactive = db.query(User).filter(
+        User.company_id == company_id,
+        User.status == "inactive",
+    ).count()
+
     return {
         "company_id": company_id,
         "summary": {
@@ -122,6 +132,8 @@ def get_dashboard(
             "employees": employees_count,
             "tasks": tasks_count,
             "reports": reports_count,
+            "users_active": users_active,
+            "users_inactive": users_inactive,
         },
         "tasks": {
             "pending": tasks_pending,
