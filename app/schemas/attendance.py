@@ -17,3 +17,12 @@ class AttendanceUpdate(BaseModel):
         pattern="^(present|absent|late|leave)$"
     )
     note: str | None = None
+
+from uuid import UUID
+
+class AttendanceResponse(BaseModel):
+    uuid: UUID
+    check_in: datetime | None = None
+    check_out: datetime | None = None
+    status: str
+    note: str | None = None

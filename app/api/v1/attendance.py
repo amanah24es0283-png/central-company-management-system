@@ -7,7 +7,7 @@ from app.models.attendance import Attendance
 from app.models.employee import Employee
 from app.models.department import Department
 from app.models.branch import Branch
-from app.schemas.attendance import AttendanceCreate, AttendanceUpdate
+from app.schemas.attendance import AttendanceCreate, AttendanceUpdate, AttendanceResponse
 
 router = APIRouter(prefix="/attendance", tags=["Attendance"])
 
@@ -130,14 +130,14 @@ def list_attendance(
     return query.all()
 
 
-@router.get("/{attendance_id}")
+@router.get("/{attendance_uuid}", response_model=AttendanceResponse)
 def get_attendance(
-    attendance_id: int,
+    attendance_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     attendance = db.query(Attendance).filter(
-        Attendance.id == attendance_id
+        Attendance.uuid == attendance_uuid
     ).first()
 
     if not attendance:
@@ -160,15 +160,15 @@ def get_attendance(
     return attendance
 
 
-@router.patch("/{attendance_id}")
+@router.patch("/{attendance_uuid}", response_model=AttendanceResponse)
 def update_attendance(
-    attendance_id: int,
+    attendance_uuid: str,
     data: AttendanceUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     attendance = db.query(Attendance).filter(
-        Attendance.id == attendance_id
+        Attendance.uuid == attendance_uuid
     ).first()
 
     if not attendance:
