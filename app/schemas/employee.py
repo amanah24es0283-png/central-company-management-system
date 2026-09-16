@@ -19,3 +19,11 @@ class EmployeeUpdate(BaseModel):
     phone: str | None = Field(default=None, max_length=30)
     hire_date: datetime | None = None
     status: str | None = Field(default=None, pattern="^(active|inactive)$")
+
+from uuid import UUID
+
+class EmployeeResponse(BaseModel):
+    uuid: UUID
+    employee_code: str
+    job_title: str
+    status: str

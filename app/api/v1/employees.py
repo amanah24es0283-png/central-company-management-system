@@ -7,7 +7,7 @@ from app.models.employee import Employee
 from app.models.user import User
 from app.models.department import Department
 from app.models.branch import Branch
-from app.schemas.employee import EmployeeCreate, EmployeeUpdate
+from app.schemas.employee import EmployeeCreate, EmployeeUpdate, EmployeeResponse
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
 
@@ -43,14 +43,14 @@ def list_employees(
     ).all()
 
 
-@router.get("/{employee_id}")
+@router.get("/{employee_uuid}", response_model=EmployeeResponse)
 def get_employee(
-    employee_id: int,
+    employee_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     employee = db.query(Employee).filter(
-        Employee.id == employee_id
+        Employee.uuid == employee_uuid
     ).first()
 
     if not employee:
@@ -155,15 +155,15 @@ def create_employee(
     return employee
 
 
-@router.patch("/{employee_id}")
+@router.patch("/{employee_uuid}", response_model=EmployeeResponse)
 def update_employee(
-    employee_id: int,
+    employee_uuid: str,
     data: EmployeeUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     employee = db.query(Employee).filter(
-        Employee.id == employee_id
+        Employee.uuid == employee_uuid
     ).first()
 
     if not employee:
