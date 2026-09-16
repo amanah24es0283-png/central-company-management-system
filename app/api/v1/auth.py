@@ -73,7 +73,7 @@ def login(
         "access_token": access_token,
         "token_type": "bearer",
         "user": {
-            "id": user.id,
+            "uuid": str(user.uuid),
             "full_name": user.full_name,
             "email": user.email,
             "role": user.role,

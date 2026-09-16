@@ -125,3 +125,12 @@ app.include_router(
     branch_explorer_router,
     prefix="/api/v1"
 )
+
+
+
+from app.api.v1.users import router as users_router
+
+app.include_router(
+    users_router,
+    prefix="/api/v1"
+)
