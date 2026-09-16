@@ -112,6 +112,14 @@ def update_user(
 
     update_data = data.model_dump(exclude_unset=True)
 
+    if "company_id" in update_data and update_data["company_id"] != current_token["company_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You cannot move a user to another company",
+        )
+
+    update_data.pop("company_id", None)
+
     for field, value in update_data.items():
         setattr(user, field, value)
 
