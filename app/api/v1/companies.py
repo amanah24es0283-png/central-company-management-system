@@ -30,16 +30,16 @@ def get_company(
 ):
     company = db.query(Company).filter(Company.uuid == company_uuid).first()
 
-    if not company or company.id != current_token["company_id"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have access to this company",
-        )
-
     if not company:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Company not found",
+        )
+
+    if company.id != current_token["company_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have access to this company",
         )
 
     return company
@@ -93,16 +93,16 @@ def update_company(
 ):
     company = db.query(Company).filter(Company.uuid == company_uuid).first()
 
-    if not company or company.id != current_token["company_id"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have access to this company",
-        )
-
     if not company:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Company not found",
+        )
+
+    if company.id != current_token["company_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have access to this company",
         )
 
     if data.name is not None:
