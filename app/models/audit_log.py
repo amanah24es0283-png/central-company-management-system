@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+import uuid as uuid_lib
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.database import Base
@@ -10,6 +12,14 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
+
+    uuid: Mapped[uuid_lib.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        default=uuid_lib.uuid4,
+        nullable=False,
+        unique=True,
+        index=True
+    )
 
     user_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id"),
