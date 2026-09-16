@@ -5,7 +5,7 @@ from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.models.company import Company
 from app.services.audit import log_action
-from app.schemas.company import CompanyCreate, CompanyUpdate
+from app.schemas.company import CompanyCreate, CompanyUpdate, CompanyResponse
 
 router = APIRouter(prefix="/companies", tags=["Companies"])
 
@@ -22,19 +22,19 @@ def list_companies(
     return companies
 
 
-@router.get("/{company_id}")
+@router.get("/{company_uuid}", response_model=CompanyResponse)
 def get_company(
-    company_id: int,
+    company_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
-    if company_id != current_token["company_id"]:
+    company = db.query(Company).filter(Company.uuid == company_uuid).first()
+
+    if not company or company.id != current_token["company_id"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to this company",
         )
-
-    company = db.query(Company).filter(Company.id == company_id).first()
 
     if not company:
         raise HTTPException(
@@ -84,20 +84,20 @@ def create_company(
     return company
 
 
-@router.patch("/{company_id}")
+@router.patch("/{company_uuid}", response_model=CompanyResponse)
 def update_company(
-    company_id: int,
+    company_uuid: str,
     data: CompanyUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
-    if company_id != current_token["company_id"]:
+    company = db.query(Company).filter(Company.uuid == company_uuid).first()
+
+    if not company or company.id != current_token["company_id"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to this company",
         )
-
-    company = db.query(Company).filter(Company.id == company_id).first()
 
     if not company:
         raise HTTPException(
@@ -108,7 +108,7 @@ def update_company(
     if data.name is not None:
         existing_company = db.query(Company).filter(
             Company.name == data.name,
-            Company.id != company_id,
+            Company.id != company.id,
         ).first()
 
         if existing_company:

@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel, Field
 
 
@@ -12,3 +13,11 @@ class CompanyUpdate(BaseModel):
     description: str | None = None
     country: str | None = Field(default=None, min_length=2, max_length=100)
     status: str | None = Field(default=None, pattern="^(active|inactive)$")
+
+
+class CompanyResponse(BaseModel):
+    uuid: UUID
+    name: str
+    description: str | None = None
+    country: str
+    status: str
