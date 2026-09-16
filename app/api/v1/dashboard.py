@@ -165,6 +165,7 @@ def get_dashboard(
             "pending": leave_pending,
             "approved": leave_approved,
             "rejected": leave_rejected,
+            "total": leave_pending + leave_approved + leave_rejected,
         },
         "notifications": {
             "unread": notifications_unread,
