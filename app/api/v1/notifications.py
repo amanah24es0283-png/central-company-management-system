@@ -9,6 +9,7 @@ from app.models.user import User
 from app.schemas.notification import (
     NotificationCreate,
     NotificationUpdate,
+    NotificationResponse,
 )
 
 router = APIRouter(
@@ -72,14 +73,14 @@ def list_notifications(
     return query.all()
 
 
-@router.get("/{notification_id}")
+@router.get("/{notification_uuid}", response_model=NotificationResponse)
 def get_notification(
-    notification_id: int,
+    notification_uuid: str,
     current_token: dict = Depends(get_current_token),
     db: Session = Depends(get_db),
 ):
     notification = db.query(Notification).filter(
-        Notification.id == notification_id
+        Notification.uuid == notification_uuid
     ).first()
 
     if not notification:
@@ -97,15 +98,15 @@ def get_notification(
     return notification
 
 
-@router.patch("/{notification_id}")
+@router.patch("/{notification_uuid}", response_model=NotificationResponse)
 def update_notification(
-    notification_id: int,
+    notification_uuid: str,
     data: NotificationUpdate,
     current_token: dict = Depends(get_current_token),
     db: Session = Depends(get_db),
 ):
     notification = db.query(Notification).filter(
-        Notification.id == notification_id
+        Notification.uuid == notification_uuid
     ).first()
 
     if not notification:

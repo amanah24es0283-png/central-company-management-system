@@ -14,3 +14,13 @@ class NotificationCreate(BaseModel):
 
 class NotificationUpdate(BaseModel):
     is_read: bool
+
+
+from uuid import UUID
+
+class NotificationResponse(BaseModel):
+    uuid: UUID
+    title: str
+    message: str
+    notification_type: str
+    is_read: bool
