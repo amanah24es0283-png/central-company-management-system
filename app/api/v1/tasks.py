@@ -8,7 +8,7 @@ from app.models.task_history import TaskHistory
 from app.models.employee import Employee
 from app.models.department import Department
 from app.models.branch import Branch
-from app.schemas.task import TaskCreate, TaskUpdate, TaskStatusUpdate
+from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse, TaskStatusUpdate
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -110,14 +110,14 @@ def list_tasks(
     return query.all()
 
 
-@router.get("/{task_id}")
+@router.get("/{task_uuid}", response_model=TaskResponse)
 def get_task(
-    task_id: int,
+    task_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     task = db.query(Task).filter(
-        Task.id == task_id
+        Task.uuid == task_uuid
     ).first()
 
     if not task:
@@ -191,15 +191,15 @@ def create_task(
     return task
 
 
-@router.patch("/{task_id}")
+@router.patch("/{task_uuid}", response_model=TaskResponse)
 def update_task(
-    task_id: int,
+    task_uuid: str,
     data: TaskUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     task = db.query(Task).filter(
-        Task.id == task_id
+        Task.uuid == task_uuid
     ).first()
 
     if not task:
@@ -274,15 +274,15 @@ def update_task(
     return task
 
 
-@router.patch("/{task_id}/status")
+@router.patch("/{task_uuid}/status", response_model=TaskResponse)
 def update_task_status(
-    task_id: int,
+    task_uuid: str,
     data: TaskStatusUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     task = db.query(Task).filter(
-        Task.id == task_id
+        Task.uuid == task_uuid
     ).first()
 
     if not task:

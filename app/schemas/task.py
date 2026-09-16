@@ -34,3 +34,12 @@ class TaskStatusUpdate(BaseModel):
         pattern="^(pending|in_progress|completed|cancelled)$"
     )
     note: str | None = None
+
+from uuid import UUID
+
+class TaskResponse(BaseModel):
+    uuid: UUID
+    title: str
+    description: str | None = None
+    priority: str
+    status: str
