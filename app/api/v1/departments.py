@@ -5,7 +5,7 @@ from app.core.authorization import require_roles
 from app.db.database import get_db
 from app.models.department import Department
 from app.models.branch import Branch
-from app.schemas.department import DepartmentCreate, DepartmentUpdate
+from app.schemas.department import DepartmentCreate, DepartmentUpdate, DepartmentResponse
 
 router = APIRouter(prefix="/departments", tags=["Departments"])
 
@@ -37,14 +37,14 @@ def list_departments(
     ).all()
 
 
-@router.get("/{department_id}")
+@router.get("/{department_uuid}", response_model=DepartmentResponse)
 def get_department(
-    department_id: int,
+    department_uuid: str,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     department = db.query(Department).filter(
-        Department.id == department_id
+        Department.uuid == department_uuid
     ).first()
 
     if not department:
@@ -102,15 +102,15 @@ def create_department(
     return department
 
 
-@router.patch("/{department_id}")
+@router.patch("/{department_uuid}", response_model=DepartmentResponse)
 def update_department(
-    department_id: int,
+    department_uuid: str,
     data: DepartmentUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     department = db.query(Department).filter(
-        Department.id == department_id
+        Department.uuid == department_uuid
     ).first()
 
     if not department:
