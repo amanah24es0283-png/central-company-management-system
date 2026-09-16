@@ -14,6 +14,7 @@ from app.models.branch import Branch
 from app.schemas.report import (
     ReportCreate,
     ReportUpdate,
+    ReportResponse,
     ReportStatusUpdate,
 )
 
@@ -271,14 +272,14 @@ def leave_report(
     )
 
 
-@router.get("/{report_id}")
+@router.get("/{report_uuid}", response_model=ReportResponse)
 def get_report(
-    report_id: int,
-    current_token: dict = Depends(require_roles("OWNER")),
+    report_uuid: str,
+        current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     report = db.query(Report).filter(
-        Report.id == report_id
+        Report.uuid == report_uuid
     ).first()
 
     if not report:
@@ -296,15 +297,15 @@ def get_report(
     return report
 
 
-@router.patch("/{report_id}")
+@router.patch("/{report_uuid}", response_model=ReportResponse)
 def update_report(
-    report_id: int,
+    report_uuid: str,
     data: ReportUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     report = db.query(Report).filter(
-        Report.id == report_id
+        Report.uuid == report_uuid
     ).first()
 
     if not report:
@@ -342,15 +343,15 @@ def update_report(
     return report
 
 
-@router.patch("/{report_id}/status")
+@router.patch("/{report_uuid}/status", response_model=ReportResponse)
 def update_report_status(
-    report_id: int,
+    report_uuid: str,
     data: ReportStatusUpdate,
     current_token: dict = Depends(require_roles("OWNER")),
     db: Session = Depends(get_db),
 ):
     report = db.query(Report).filter(
-        Report.id == report_id
+        Report.uuid == report_uuid
     ).first()
 
     if not report:

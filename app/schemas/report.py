@@ -27,3 +27,12 @@ class ReportStatusUpdate(BaseModel):
     status: str = Field(
         pattern="^(draft|submitted|approved|rejected)$"
     )
+
+from uuid import UUID
+
+class ReportResponse(BaseModel):
+    uuid: UUID
+    report_type: str
+    title: str
+    content: str | None = None
+    status: str
