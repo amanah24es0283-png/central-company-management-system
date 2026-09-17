@@ -45,6 +45,7 @@ function App() {
   const [activePage, setActivePage] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
+  const [companySearch, setCompanySearch] = useState("");
   const [companyLoading, setCompanyLoading] = useState(false);
   const [companyError, setCompanyError] = useState("");
   const [branches, setBranches] = useState([]);
@@ -1211,7 +1212,32 @@ if (page === "leaves") {
 
             {!companyLoading && !companyError && companies.length > 0 && (
               <div className="company-grid">
-                {companies.map((company) => (
+                <div className="search-box">
+                  <input
+                    type="text"
+                    placeholder="ابحث باسم الشركة أو الدولة أو الوصف..."
+                    value={companySearch}
+                    onChange={(e) => setCompanySearch(e.target.value)}
+                  />
+                </div>
+
+                {companies
+                  .filter((company) => {
+                    const q = companySearch.toLowerCase().trim();
+                    if (!q) return true;
+
+                    return [
+                      company.name,
+                      company.country,
+                      company.description,
+                      company.status,
+                    ]
+                      .filter(Boolean)
+                      .some((value) =>
+                        String(value).toLowerCase().includes(q)
+                      );
+                  })
+                  .map((company) => (
                   <div className="company-card" key={company.uuid}>
                     <div className="company-card-header">
                       <div className="company-logo">
