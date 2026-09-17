@@ -845,3 +845,23 @@ input:focus{
   }
 }
 
+
+.search-box {
+  margin: 18px 0;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+}
+
+.search-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
