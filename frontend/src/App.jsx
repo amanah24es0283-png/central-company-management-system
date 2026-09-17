@@ -1294,6 +1294,100 @@ if (page === "leaves") {
             </div>
           </section>
 
+        ) : activePage === "audit" ? (
+          <section className="page-section">
+            <div className="page-heading">
+              <div>
+                <h2>سجل التدقيق</h2>
+                <p>متابعة العمليات والأحداث الأمنية داخل نظام CCMS.</p>
+              </div>
+
+              <div className="page-count">
+                {auditLogs.length} سجل
+              </div>
+            </div>
+
+            {auditLoading && (
+              <div className="loading-box">
+                جاري تحميل سجل التدقيق...
+              </div>
+            )}
+
+            {auditError && (
+              <div className="error-box">
+                {auditError}
+              </div>
+            )}
+
+            {!auditLoading &&
+              !auditError &&
+              auditLogs.length === 0 && (
+                <div className="empty-box">
+                  لا توجد سجلات تدقيق حالياً.
+                </div>
+              )}
+
+            {!auditLoading &&
+              !auditError &&
+              auditLogs.length > 0 && (
+                <div className="company-grid">
+                  {auditLogs.map((log, index) => (
+                    <div
+                      className="company-card"
+                      key={log.uuid || index}
+                    >
+                      <div className="company-card-header">
+                        <div className="company-logo">
+                          <ShieldCheck size={28} />
+                        </div>
+
+                        <span className="company-status active">
+                          {log.action}
+                        </span>
+                      </div>
+
+                      <h3>{log.entity_type}</h3>
+
+                      <p className="company-description">
+                        {log.details || "لا توجد تفاصيل إضافية."}
+                      </p>
+
+                      <div className="company-details">
+                        <div>
+                          <span>المستخدم</span>
+                          <strong>
+                            {log.user_id ?? "النظام"}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>Entity ID</span>
+                          <strong>
+                            {log.entity_id ?? "—"}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>التاريخ</span>
+                          <strong>
+                            {log.created_at
+                              ? new Date(
+                                  log.created_at
+                                ).toLocaleString("ar-IQ")
+                              : "غير محدد"}
+                          </strong>
+                        </div>
+                      </div>
+
+                      <small className="uuid-text">
+                        UUID: {log.uuid}
+                      </small>
+                    </div>
+                  ))}
+                </div>
+              )}
+          </section>
+
         ) : activePage === "notifications" ? (
           <section className="page-section">
             <div className="page-heading">
