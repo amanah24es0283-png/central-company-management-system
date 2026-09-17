@@ -1006,3 +1006,27 @@ input:focus{
   }
 }
 
+
+.export-message {
+  margin: 16px 0;
+  padding: 13px 18px;
+  border-radius: 12px;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
+  animation: exportMessageIn .25s ease;
+}
+
+@keyframes exportMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
