@@ -69,6 +69,10 @@ const [leaves, setLeaves] = useState([]);
 const [leaveLoading, setLeaveLoading] = useState(false);
 const [leaveError, setLeaveError] = useState("");
 
+  const [reports, setReports] = useState([]);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportError, setReportError] = useState("");
+
 
 
 
@@ -210,7 +214,28 @@ const [departmentError, setDepartmentError] = useState("");
       }
     }
 
-    if (page === "leaves") {
+    if (page === "reports") {
+  setReportLoading(true);
+  setReportError("");
+
+  try {
+    const response = await axios.get(
+      `${API}/api/v1/reports/`,
+      { headers }
+    );
+    setReports(response.data);
+  } catch (err) {
+    console.error(err);
+    setReportError(
+      err.response?.data?.detail ||
+      "تعذر تحميل التقارير"
+    );
+  } finally {
+    setReportLoading(false);
+  }
+}
+
+if (page === "leaves") {
     setLeaveLoading(true);
     setLeaveError("");
 
