@@ -1136,3 +1136,268 @@ input:focus{
     gap: 4px;
   }
 }
+
+/* ===== CCMS FINAL VISUAL POLISH ===== */
+
+:root{
+  --ccms-navy:#0b1736;
+  --ccms-blue:#2563eb;
+  --ccms-sky:#38bdf8;
+  --ccms-bg:#f4f7fb;
+  --ccms-border:#e4eaf2;
+  --ccms-text:#0f172a;
+  --ccms-muted:#64748b;
+}
+
+body{
+  background:var(--ccms-bg);
+  color:var(--ccms-text);
+}
+
+/* Sidebar */
+.sidebar{
+  background:linear-gradient(180deg,#0b1736 0%,#102a5c 100%);
+  box-shadow:-12px 0 35px rgba(15,23,42,.14);
+}
+
+.brand-icon{
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  box-shadow:0 8px 20px rgba(37,99,235,.3);
+}
+
+.menu-item{
+  border:1px solid transparent;
+}
+
+.menu-item:hover{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.06);
+}
+
+.menu-item.active{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  box-shadow:0 8px 22px rgba(37,99,235,.28);
+}
+
+/* Header */
+.main-header{
+  background:rgba(255,255,255,.96);
+  box-shadow:0 4px 18px rgba(15,23,42,.04);
+}
+
+.header-avatar{
+  background:linear-gradient(135deg,#dbeafe,#e0f2fe);
+  color:#1d4ed8;
+}
+
+/* Main welcome */
+.welcome{
+  background:
+    radial-gradient(circle at 90% 20%,rgba(56,189,248,.12),transparent 28%),
+    linear-gradient(135deg,#ffffff,#eef5ff);
+  border:1px solid #dce8f7;
+  box-shadow:0 12px 32px rgba(30,64,175,.07);
+}
+
+/* Dashboard cards */
+.card,
+.panel,
+.company-card,
+.coming-soon{
+  border:1px solid var(--ccms-border);
+  box-shadow:0 8px 26px rgba(15,23,42,.055);
+}
+
+.card:hover,
+.company-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 34px rgba(15,23,42,.09);
+}
+
+.card-icon,
+.company-logo,
+.coming-icon{
+  background:linear-gradient(135deg,#eff6ff,#e0f2fe);
+  color:#2563eb;
+}
+
+/* Titles */
+.page-heading h2,
+.welcome h2{
+  color:#0b1736;
+  letter-spacing:-.3px;
+}
+
+.page-count{
+  background:linear-gradient(135deg,#dbeafe,#e0f2fe);
+  color:#1d4ed8;
+  border:1px solid #bfdbfe;
+}
+
+/* Search + filters */
+.search-box input,
+.filter-row select{
+  background:#fff;
+  border:1px solid #d8e1ec;
+  transition:.2s ease;
+}
+
+.search-box input:hover,
+.filter-row select:hover{
+  border-color:#93c5fd;
+}
+
+.search-box input:focus,
+.filter-row select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 4px rgba(37,99,235,.08);
+}
+
+/* Status */
+.company-status.active{
+  background:#dcfce7;
+  color:#15803d;
+  border:1px solid #bbf7d0;
+}
+
+.company-status.inactive{
+  background:#fee2e2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+}
+
+/* Primary action buttons */
+.primary-button{
+  border:0;
+  border-radius:11px;
+  padding:10px 16px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 15px rgba(37,99,235,.2);
+  transition:.2s ease;
+}
+
+.primary-button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 9px 20px rgba(37,99,235,.28);
+}
+
+/* Notification cards */
+.notification-card{
+  border:1px solid var(--ccms-border);
+  box-shadow:0 6px 18px rgba(15,23,42,.04);
+  transition:.2s ease;
+}
+
+.notification-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 25px rgba(15,23,42,.08);
+}
+
+.notification-card.unread{
+  border-right:4px solid #2563eb;
+  background:linear-gradient(90deg,#fff,#f5f9ff);
+}
+
+.notification-icon{
+  background:linear-gradient(135deg,#eff6ff,#e0f2fe);
+}
+
+/* Export cards */
+.export-card{
+  border:1px solid var(--ccms-border);
+  box-shadow:0 6px 18px rgba(15,23,42,.04);
+}
+
+.export-card:hover{
+  border-color:#bfdbfe;
+  background:#fafdff;
+}
+
+/* Audit / data cards */
+.company-details{
+  border-top-color:#edf2f7;
+}
+
+.uuid-text{
+  color:#475569;
+  background:#f8fafc;
+  border-radius:6px;
+  padding:2px 5px;
+}
+
+/* Loading / empty / error */
+.loading-box,
+.empty-box{
+  border:1px solid var(--ccms-border);
+  box-shadow:0 8px 24px rgba(15,23,42,.04);
+}
+
+.loading-box{
+  background:linear-gradient(135deg,#fff,#f5f9ff);
+}
+
+.error-box{
+  border:1px solid #fecaca;
+}
+
+/* Login */
+.login-page{
+  background:
+    radial-gradient(circle at 20% 20%,rgba(56,189,248,.18),transparent 25%),
+    radial-gradient(circle at 80% 80%,rgba(37,99,235,.2),transparent 28%),
+    linear-gradient(135deg,#081431,#123477);
+}
+
+.login-card{
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 30px 80px rgba(2,8,23,.35);
+}
+
+.login-card .logo{
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  box-shadow:0 10px 25px rgba(37,99,235,.3);
+}
+
+.login-card button{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  box-shadow:0 8px 20px rgba(37,99,235,.22);
+}
+
+.login-card button:hover{
+  background:linear-gradient(135deg,#1d4ed8,#1e40af);
+}
+
+/* Smooth global feel */
+button,
+input,
+select,
+.card,
+.panel,
+.company-card,
+.notification-card,
+.export-card{
+  transition:all .2s ease;
+}
+
+/* Better mobile cards */
+@media(max-width:700px){
+  .cards{
+    gap:12px;
+  }
+
+  .card{
+    border-radius:16px;
+  }
+
+  .company-card{
+    border-radius:17px;
+  }
+
+  .page-section{
+    padding-top:24px;
+  }
+}
+
