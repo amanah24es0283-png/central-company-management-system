@@ -57,6 +57,11 @@ function App() {
   const [employeeLoading, setEmployeeLoading] = useState(false);
   const [employeeError, setEmployeeError] = useState("");
 
+const [tasks, setTasks] = useState([]);
+const [taskLoading, setTaskLoading] = useState(false);
+const [taskError, setTaskError] = useState("");
+
+
 const [departments, setDepartments] = useState([]);
 const [departmentLoading, setDepartmentLoading] = useState(false);
 const [departmentError, setDepartmentError] = useState("");
@@ -195,7 +200,28 @@ const [departmentError, setDepartmentError] = useState("");
       }
     }
 
-    if (page === "departments") {
+    if (page === "tasks") {
+    setTaskLoading(true);
+    setTaskError("");
+
+    try {
+      const response = await axios.get(
+        `${API}/api/v1/tasks/`,
+        { headers }
+      );
+      setTasks(response.data);
+    } catch (err) {
+      console.error(err);
+      setTaskError(
+        err.response?.data?.detail ||
+        "تعذر تحميل بيانات المهام"
+      );
+    } finally {
+      setTaskLoading(false);
+    }
+  }
+
+  if (page === "departments") {
     setDepartmentLoading(true);
     setDepartmentError("");
 
@@ -494,7 +520,71 @@ const [departmentError, setDepartmentError] = useState("");
               </div>
             </section>
           </>
-        ) : activePage === "departments" ? (
+        ) : activePage === "tasks" ? (
+    <section className="page-section">
+      <div className="page-heading">
+        <div>
+          <h2>المهام</h2>
+          <p>إدارة ومتابعة مهام الشركة والموظفين</p>
+        </div>
+        <span className="page-count">
+          {tasks.length} مهمة
+        </span>
+      </div>
+
+      {taskLoading ? (
+        <div className="loading-box">جاري تحميل المهام...</div>
+      ) : taskError ? (
+        <div className="error-box">{taskError}</div>
+      ) : tasks.length === 0 ? (
+        <div className="empty-box">لا توجد مهام حالياً</div>
+      ) : (
+        <div className="company-grid">
+          {tasks.map((task, index) => (
+            <div
+              className="company-card"
+              key={task.uuid || index}
+            >
+              <div className="company-card-header">
+                <div className="company-logo">
+                  <ClipboardList size={28} />
+                </div>
+
+                <span className="company-status active">
+                  {task.status || "غير محدد"}
+                </span>
+              </div>
+
+              <h3>{task.title || "مهمة"}</h3>
+
+              <p className="company-description">
+                {task.description || "لا يوجد وصف للمهمة"}
+              </p>
+
+              <div className="company-details">
+                <div>
+                  <span>الأولوية</span>
+                  <strong>{task.priority || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>الحالة</span>
+                  <strong>{task.status || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>UUID</span>
+                  <strong className="uuid-text">
+                    {task.uuid || "غير متوفر"}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  ) : activePage === "departments" ? (
     <section className="page-section">
       <div className="page-heading">
         <div>
