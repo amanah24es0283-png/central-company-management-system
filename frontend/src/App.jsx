@@ -56,6 +56,10 @@ function App() {
   const [employees, setEmployees] = useState([]);
   const [employeeLoading, setEmployeeLoading] = useState(false);
   const [employeeError, setEmployeeError] = useState("");
+
+const [departments, setDepartments] = useState([]);
+const [departmentLoading, setDepartmentLoading] = useState(false);
+const [departmentError, setDepartmentError] = useState("");
   const currentPage =
     menuItems.find((item) => item.id === activePage)?.label || "لوحة التحكم";
 
@@ -191,7 +195,28 @@ function App() {
       }
     }
 
-    if (page === "employees") {
+    if (page === "departments") {
+    setDepartmentLoading(true);
+    setDepartmentError("");
+
+    try {
+      const response = await axios.get(
+        `${API}/api/v1/departments/`,
+        { headers }
+      );
+      setDepartments(response.data);
+    } catch (err) {
+      console.error(err);
+      setDepartmentError(
+        err.response?.data?.detail ||
+        "تعذر تحميل بيانات الأقسام"
+      );
+    } finally {
+      setDepartmentLoading(false);
+    }
+  }
+
+  if (page === "employees") {
       setEmployeeLoading(true);
       setEmployeeError("");
 
@@ -469,7 +494,66 @@ function App() {
               </div>
             </section>
           </>
-        ) : activePage === "employees" ? (
+        ) : activePage === "departments" ? (
+    <section className="page-section">
+      <div className="page-heading">
+        <div>
+          <h2>الأقسام</h2>
+          <p>إدارة أقسام الشركة والفروع التابعة لها</p>
+        </div>
+        <span className="page-count">
+          {departments.length} قسم
+        </span>
+      </div>
+
+      {departmentLoading ? (
+        <div className="loading-box">جاري تحميل الأقسام...</div>
+      ) : departmentError ? (
+        <div className="error-box">{departmentError}</div>
+      ) : departments.length === 0 ? (
+        <div className="empty-box">لا توجد أقسام حالياً</div>
+      ) : (
+        <div className="company-grid">
+          {departments.map((department, index) => (
+            <div
+              className="company-card"
+              key={department.uuid || index}
+            >
+              <div className="company-card-header">
+                <div className="company-logo">
+                  <BriefcaseBusiness size={28} />
+                </div>
+
+                <span className="company-status active">
+                  نشط
+                </span>
+              </div>
+
+              <h3>{department.name || "قسم"}</h3>
+
+              <p className="company-description">
+                {department.description || "لا يوجد وصف للقسم"}
+              </p>
+
+              <div className="company-details">
+                <div>
+                  <span>رقم الفرع</span>
+                  <strong>{department.branch_id ?? "—"}</strong>
+                </div>
+
+                <div>
+                  <span>UUID</span>
+                  <strong className="uuid-text">
+                    {department.uuid || "غير متوفر"}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  ) : activePage === "employees" ? (
           <section className="page-section">
             <div style={{padding:"20px",background:"#dbeafe",borderRadius:"12px",marginBottom:"20px"}}>
               صفحة الموظفين تعمل — عدد الموظفين: {employees.length}
