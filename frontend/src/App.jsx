@@ -1221,6 +1221,79 @@ if (page === "leaves") {
             )}
           </section>
 
+        ) : activePage === "reports" ? (
+          <section className="page-section">
+            <div className="page-heading">
+              <div>
+                <h2>التقارير والتصدير</h2>
+                <p>إدارة التقارير وتصدير بيانات النظام</p>
+              </div>
+              <span className="page-count">
+                {reports.length} تقرير
+              </span>
+            </div>
+
+            <div className="export-grid">
+              <button
+                className="export-card"
+                onClick={() => window.open(`${API}/api/v1/reports/employees/export`, "_blank")}
+              >
+                <FileText size={28} />
+                <strong>تصدير الموظفين</strong>
+                <span>Employees CSV</span>
+              </button>
+
+              <button
+                className="export-card"
+                onClick={() => window.open(`${API}/api/v1/reports/tasks/export`, "_blank")}
+              >
+                <ClipboardList size={28} />
+                <strong>تصدير المهام</strong>
+                <span>Tasks CSV</span>
+              </button>
+
+              <button
+                className="export-card"
+                onClick={() => window.open(`${API}/api/v1/reports/branches/export`, "_blank")}
+              >
+                <GitBranch size={28} />
+                <strong>تصدير الفروع</strong>
+                <span>Branches CSV</span>
+              </button>
+
+              <button
+                className="export-card"
+                onClick={() => window.open(`${API}/api/v1/reports/leave-requests/export`, "_blank")}
+              >
+                <CalendarDays size={28} />
+                <strong>تصدير الإجازات</strong>
+                <span>Leave Requests CSV</span>
+              </button>
+            </div>
+
+            <div className="company-grid">
+              {reports.map((report, index) => (
+                <div
+                  className="company-card"
+                  key={report.uuid || index}
+                >
+                  <div className="company-card-header">
+                    <div className="company-logo">
+                      <FileText size={28} />
+                    </div>
+                    <span className="company-status active">
+                      {report.status || "غير محدد"}
+                    </span>
+                  </div>
+
+                  <h3>{report.title || "تقرير بدون عنوان"}</h3>
+                  <p>{report.report_type || "تقرير عام"}</p>
+                  <small>{report.content || "لا يوجد وصف"}</small>
+                </div>
+              ))}
+            </div>
+          </section>
+
         ) : activePage === "companies" ? (
           <section className="page-section">
             <div className="page-heading">

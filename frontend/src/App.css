@@ -953,3 +953,56 @@ input:focus{
   }
 }
 
+
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.export-card {
+  border: 1px solid #dbe5f4;
+  border-radius: 18px;
+  padding: 22px;
+  background: #fff;
+  cursor: pointer;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.export-card svg {
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+.export-card strong {
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.export-card span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.export-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+}
+
+@media (max-width: 900px) {
+  .export-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .export-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
