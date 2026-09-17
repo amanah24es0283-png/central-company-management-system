@@ -58,6 +58,7 @@ function App() {
   const [employeeError, setEmployeeError] = useState("");
 
 const [tasks, setTasks] = useState([]);
+const [taskSearch, setTaskSearch] = useState("");
 const [taskLoading, setTaskLoading] = useState(false);
 const [taskError, setTaskError] = useState("");
 
@@ -805,7 +806,32 @@ if (page === "leaves") {
         <div className="empty-box">لا توجد مهام حالياً</div>
       ) : (
         <div className="company-grid">
-          {tasks.map((task, index) => (
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="ابحث باسم المهمة أو الوصف أو الأولوية أو الحالة..."
+              value={taskSearch}
+              onChange={(e) => setTaskSearch(e.target.value)}
+            />
+          </div>
+
+          {tasks
+            .filter((task) => {
+              const q = taskSearch.toLowerCase().trim();
+              if (!q) return true;
+
+              return [
+                task.title,
+                task.description,
+                task.priority,
+                task.status,
+              ]
+                .filter(Boolean)
+                .some((value) =>
+                  String(value).toLowerCase().includes(q)
+                );
+            })
+            .map((task, index) => (
             <div
               className="company-card"
               key={task.uuid || index}
