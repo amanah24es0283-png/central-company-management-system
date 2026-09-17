@@ -61,6 +61,8 @@ function App() {
 
 const [tasks, setTasks] = useState([]);
 const [taskSearch, setTaskSearch] = useState("");
+const [taskStatusFilter, setTaskStatusFilter] = useState("all");
+const [taskPriorityFilter, setTaskPriorityFilter] = useState("all");
 const [taskLoading, setTaskLoading] = useState(false);
 const [taskError, setTaskError] = useState("");
 
@@ -817,21 +819,55 @@ if (page === "leaves") {
             />
           </div>
 
+          <div className="filter-row">
+            <select
+              value={taskStatusFilter}
+              onChange={(e) => setTaskStatusFilter(e.target.value)}
+            >
+              <option value="all">كل الحالات</option>
+              <option value="pending">قيد الانتظار</option>
+              <option value="in_progress">قيد التنفيذ</option>
+              <option value="completed">مكتملة</option>
+            </select>
+
+            <select
+              value={taskPriorityFilter}
+              onChange={(e) => setTaskPriorityFilter(e.target.value)}
+            >
+              <option value="all">كل الأولويات</option>
+              <option value="low">منخفضة</option>
+              <option value="medium">متوسطة</option>
+              <option value="high">عالية</option>
+              <option value="urgent">عاجلة</option>
+            </select>
+          </div>
+
           {tasks
             .filter((task) => {
               const q = taskSearch.toLowerCase().trim();
-              if (!q) return true;
 
-              return [
-                task.title,
-                task.description,
-                task.priority,
-                task.status,
-              ]
-                .filter(Boolean)
-                .some((value) =>
-                  String(value).toLowerCase().includes(q)
-                );
+              const matchesSearch =
+                !q ||
+                [
+                  task.title,
+                  task.description,
+                  task.priority,
+                  task.status,
+                ]
+                  .filter(Boolean)
+                  .some((value) =>
+                    String(value).toLowerCase().includes(q)
+                  );
+
+              const matchesStatus =
+                taskStatusFilter === "all" ||
+                String(task.status).toLowerCase() === taskStatusFilter;
+
+              const matchesPriority =
+                taskPriorityFilter === "all" ||
+                String(task.priority).toLowerCase() === taskPriorityFilter;
+
+              return matchesSearch && matchesStatus && matchesPriority;
             })
             .map((task, index) => (
             <div
