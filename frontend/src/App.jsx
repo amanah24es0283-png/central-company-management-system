@@ -61,6 +61,16 @@ const [tasks, setTasks] = useState([]);
 const [taskLoading, setTaskLoading] = useState(false);
 const [taskError, setTaskError] = useState("");
 
+const [attendance, setAttendance] = useState([]);
+const [attendanceLoading, setAttendanceLoading] = useState(false);
+const [attendanceError, setAttendanceError] = useState("");
+
+const [leaves, setLeaves] = useState([]);
+const [leaveLoading, setLeaveLoading] = useState(false);
+const [leaveError, setLeaveError] = useState("");
+
+
+
 
 const [departments, setDepartments] = useState([]);
 const [departmentLoading, setDepartmentLoading] = useState(false);
@@ -200,7 +210,49 @@ const [departmentError, setDepartmentError] = useState("");
       }
     }
 
-    if (page === "tasks") {
+    if (page === "leaves") {
+    setLeaveLoading(true);
+    setLeaveError("");
+
+    try {
+      const response = await axios.get(
+        `${API}/api/v1/leave-requests/`,
+        { headers }
+      );
+      setLeaves(response.data);
+    } catch (err) {
+      console.error(err);
+      setLeaveError(
+        err.response?.data?.detail ||
+        "تعذر تحميل بيانات الإجازات"
+      );
+    } finally {
+      setLeaveLoading(false);
+    }
+  }
+
+  if (page === "attendance") {
+    setAttendanceLoading(true);
+    setAttendanceError("");
+
+    try {
+      const response = await axios.get(
+        `${API}/api/v1/attendance/`,
+        { headers }
+      );
+      setAttendance(response.data);
+    } catch (err) {
+      console.error(err);
+      setAttendanceError(
+        err.response?.data?.detail ||
+        "تعذر تحميل بيانات الحضور"
+      );
+    } finally {
+      setAttendanceLoading(false);
+    }
+  }
+
+  if (page === "tasks") {
     setTaskLoading(true);
     setTaskError("");
 
@@ -520,7 +572,145 @@ const [departmentError, setDepartmentError] = useState("");
               </div>
             </section>
           </>
-        ) : activePage === "tasks" ? (
+        ) : activePage === "leaves" ? (
+    <section className="page-section">
+      <div className="page-heading">
+        <div>
+          <h2>الإجازات</h2>
+          <p>إدارة ومتابعة طلبات إجازات الموظفين</p>
+        </div>
+        <span className="page-count">
+          {leaves.length} طلب
+        </span>
+      </div>
+
+      {leaveLoading ? (
+        <div className="loading-box">جاري تحميل طلبات الإجازات...</div>
+      ) : leaveError ? (
+        <div className="error-box">{leaveError}</div>
+      ) : leaves.length === 0 ? (
+        <div className="empty-box">لا توجد طلبات إجازة حالياً</div>
+      ) : (
+        <div className="company-grid">
+          {leaves.map((leave, index) => (
+            <div
+              className="company-card"
+              key={leave.uuid || index}
+            >
+              <div className="company-card-header">
+                <div className="company-logo">
+                  <CalendarDays size={28} />
+                </div>
+
+                <span className="company-status active">
+                  {leave.status || "pending"}
+                </span>
+              </div>
+
+              <h3>طلب إجازة</h3>
+
+              <p className="company-description">
+                {leave.reason || "لا يوجد سبب مذكور"}
+              </p>
+
+              <div className="company-details">
+                <div>
+                  <span>الموظف</span>
+                  <strong>{leave.employee_id ?? "—"}</strong>
+                </div>
+
+                <div>
+                  <span>من</span>
+                  <strong>{leave.start_date || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>إلى</span>
+                  <strong>{leave.end_date || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>UUID</span>
+                  <strong className="uuid-text">
+                    {leave.uuid || "غير متوفر"}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  ) : activePage === "attendance" ? (
+    <section className="page-section">
+      <div className="page-heading">
+        <div>
+          <h2>الحضور</h2>
+          <p>متابعة حضور وانصراف موظفي الشركة</p>
+        </div>
+        <span className="page-count">
+          {attendance.length} سجل
+        </span>
+      </div>
+
+      {attendanceLoading ? (
+        <div className="loading-box">جاري تحميل سجلات الحضور...</div>
+      ) : attendanceError ? (
+        <div className="error-box">{attendanceError}</div>
+      ) : attendance.length === 0 ? (
+        <div className="empty-box">لا توجد سجلات حضور حالياً</div>
+      ) : (
+        <div className="company-grid">
+          {attendance.map((record, index) => (
+            <div
+              className="company-card"
+              key={record.uuid || index}
+            >
+              <div className="company-card-header">
+                <div className="company-logo">
+                  <CalendarCheck size={28} />
+                </div>
+
+                <span className="company-status active">
+                  {record.status || "حاضر"}
+                </span>
+              </div>
+
+              <h3>سجل حضور الموظف</h3>
+
+              <p className="company-description">
+                {record.note || "لا توجد ملاحظات"}
+              </p>
+
+              <div className="company-details">
+                <div>
+                  <span>الموظف</span>
+                  <strong>{record.employee_id ?? "—"}</strong>
+                </div>
+
+                <div>
+                  <span>الدخول</span>
+                  <strong>{record.check_in || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>الخروج</span>
+                  <strong>{record.check_out || "—"}</strong>
+                </div>
+
+                <div>
+                  <span>UUID</span>
+                  <strong className="uuid-text">
+                    {record.uuid || "غير متوفر"}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  ) : activePage === "tasks" ? (
     <section className="page-section">
       <div className="page-heading">
         <div>
