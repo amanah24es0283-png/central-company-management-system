@@ -77,6 +77,10 @@ const [leaveError, setLeaveError] = useState("");
   const [notificationLoading, setNotificationLoading] = useState(false);
   const [notificationError, setNotificationError] = useState("");
 
+  const [auditLogs, setAuditLogs] = useState([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditError, setAuditError] = useState("");
+
 
 
 
@@ -218,7 +222,28 @@ const [departmentError, setDepartmentError] = useState("");
       }
     }
 
-    if (page === "notifications") {
+    if (page === "audit") {
+  setAuditLoading(true);
+  setAuditError("");
+
+  try {
+    const response = await axios.get(
+      `${API}/api/v1/audit-logs/`,
+      { headers }
+    );
+    setAuditLogs(response.data);
+  } catch (err) {
+    console.error(err);
+    setAuditError(
+      err.response?.data?.detail ||
+      "تعذر تحميل سجل التدقيق"
+    );
+  } finally {
+    setAuditLoading(false);
+  }
+}
+
+if (page === "notifications") {
   setNotificationLoading(true);
   setNotificationError("");
 
