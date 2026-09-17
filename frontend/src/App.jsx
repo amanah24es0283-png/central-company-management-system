@@ -73,6 +73,10 @@ const [leaveError, setLeaveError] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState("");
 
+  const [notifications, setNotifications] = useState([]);
+  const [notificationLoading, setNotificationLoading] = useState(false);
+  const [notificationError, setNotificationError] = useState("");
+
 
 
 
@@ -214,7 +218,28 @@ const [departmentError, setDepartmentError] = useState("");
       }
     }
 
-    if (page === "reports") {
+    if (page === "notifications") {
+  setNotificationLoading(true);
+  setNotificationError("");
+
+  try {
+    const response = await axios.get(
+      `${API}/api/v1/notifications/`,
+      { headers }
+    );
+    setNotifications(response.data);
+  } catch (err) {
+    console.error(err);
+    setNotificationError(
+      err.response?.data?.detail ||
+      "تعذر تحميل الإشعارات"
+    );
+  } finally {
+    setNotificationLoading(false);
+  }
+}
+
+if (page === "reports") {
   setReportLoading(true);
   setReportError("");
 
