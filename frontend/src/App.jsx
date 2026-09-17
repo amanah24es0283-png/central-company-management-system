@@ -48,6 +48,7 @@ function App() {
   const [companyLoading, setCompanyLoading] = useState(false);
   const [companyError, setCompanyError] = useState("");
   const [branches, setBranches] = useState([]);
+  const [branchSearch, setBranchSearch] = useState("");
   const [branchLoading, setBranchLoading] = useState(false);
   const [branchError, setBranchError] = useState("");
   const [users, setUsers] = useState([]);
@@ -1115,7 +1116,32 @@ if (page === "leaves") {
 
             {!branchLoading && !branchError && branches.length > 0 && (
               <div className="company-grid">
-                {branches.map((branch) => (
+                <div className="search-box">
+                  <input
+                    type="text"
+                    placeholder="ابحث باسم الفرع أو المدينة أو العنوان..."
+                    value={branchSearch}
+                    onChange={(e) => setBranchSearch(e.target.value)}
+                  />
+                </div>
+
+                {branches
+                  .filter((branch) => {
+                    const q = branchSearch.toLowerCase().trim();
+                    if (!q) return true;
+
+                    return [
+                      branch.name,
+                      branch.city,
+                      branch.address,
+                      branch.description,
+                    ]
+                      .filter(Boolean)
+                      .some((value) =>
+                        String(value).toLowerCase().includes(q)
+                      );
+                  })
+                  .map((branch) => (
                   <div className="company-card" key={branch.uuid}>
                     <div className="company-card-header">
                       <div className="company-logo">
