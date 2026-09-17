@@ -1294,6 +1294,129 @@ if (page === "leaves") {
             </div>
           </section>
 
+        ) : activePage === "notifications" ? (
+          <section className="page-section">
+            <div className="page-heading">
+              <div>
+                <h2>الإشعارات</h2>
+                <p>إشعارات المستخدم من نظام CCMS وقاعدة البيانات.</p>
+              </div>
+
+              <div className="page-count">
+                {notifications.filter((n) => !n.is_read).length} غير مقروء
+              </div>
+            </div>
+
+            {notificationLoading && (
+              <div className="loading-box">
+                جاري تحميل الإشعارات...
+              </div>
+            )}
+
+            {notificationError && (
+              <div className="error-box">
+                {notificationError}
+              </div>
+            )}
+
+            {!notificationLoading &&
+              !notificationError &&
+              notifications.length === 0 && (
+                <div className="empty-box">
+                  لا توجد إشعارات حالياً.
+                </div>
+              )}
+
+            {!notificationLoading &&
+              !notificationError &&
+              notifications.length > 0 && (
+                <div className="company-grid">
+                  {notifications.map((notification) => (
+                    <div
+                      className="company-card"
+                      key={notification.uuid}
+                    >
+                      <div className="company-card-header">
+                        <div className="company-logo">
+                          <Bell size={28} />
+                        </div>
+
+                        <span
+                          className={
+                            notification.is_read
+                              ? "company-status inactive"
+                              : "company-status active"
+                          }
+                        >
+                          {notification.is_read ? "مقروء" : "جديد"}
+                        </span>
+                      </div>
+
+                      <h3>{notification.title}</h3>
+
+                      <p className="company-description">
+                        {notification.message}
+                      </p>
+
+                      <div className="company-details">
+                        <div>
+                          <span>النوع</span>
+                          <strong>
+                            {notification.notification_type || "عام"}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>التاريخ</span>
+                          <strong>
+                            {notification.created_at
+                              ? new Date(
+                                  notification.created_at
+                                ).toLocaleString("ar-IQ")
+                              : "غير محدد"}
+                          </strong>
+                        </div>
+                      </div>
+
+                      {!notification.is_read && (
+                        <button
+                          className="primary-button"
+                          onClick={async () => {
+                            try {
+                              const token =
+                                localStorage.getItem("token");
+
+                              const response = await axios.patch(
+                                `${API}/api/v1/notifications/${notification.uuid}`,
+                                { is_read: true },
+                                {
+                                  headers: {
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                }
+                              );
+
+                              setNotifications((current) =>
+                                current.map((item) =>
+                                  item.uuid === notification.uuid
+                                    ? response.data
+                                    : item
+                                )
+                              );
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }}
+                        >
+                          تحديد كمقروء
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+          </section>
+
         ) : activePage === "companies" ? (
           <section className="page-section">
             <div className="page-heading">
